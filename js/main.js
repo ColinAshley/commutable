@@ -1,12 +1,13 @@
 // functions
 function getData() {
   // Request data for specified stations
-  let from1 = document.getElementById("fromCRS1").value;
-  let dest = document.getElementById("toCRS").value;
+  let from = document.getElementById("fromCRS1").value;
+  let dest = document.getElementById("toCRS1").value;
+  document.getElementById("fromCRS2").value = dest;
+  document.getElementById("toCRS2").value = from;
   let rows = 8;
 
-
-  fetch(`https://huxley.apphb.com/departures/${from1}/to/${dest}/${rows}?expand=true&accessToken=6c40282b-0b27-431d-97c5-7366a47e6e51`, {
+  fetch(`https://huxley.apphb.com/departures/${from}/to/${dest}/${rows}?expand=true&accessToken=6c40282b-0b27-431d-97c5-7366a47e6e51`, {
     // nothing here
     }).then(response => response.json())
     .then(showData)
@@ -16,7 +17,7 @@ function getData() {
 function showData(data) {
   let lastRefresh = new Date().toLocaleTimeString('en-UK');
   document.getElementsByClassName('last-update')[0].textContent = `Last Update: ${lastRefresh}`;
-  let journeyDest = document.getElementById("toCRS").value;
+  let journeyDest = document.getElementById("toCRS1").value;
   let journeyOrigin = document.getElementById("fromCRS1").value;
   let delaydata = '';
   delaylist[0].innerHTML = '';
@@ -89,7 +90,7 @@ function fillStations(destinations, field ) {
 
 function saveLocalData() {
   let from = document.getElementById("fromCRS1").value;
-  let to = document.getElementById("toCRS").value;
+  let to = document.getElementById("toCRS1").value;
   window.localStorage.setItem('from', from );
   window.localStorage.setItem('to', to );
 }
@@ -98,7 +99,8 @@ function readLocalData() {
   from = window.localStorage.getItem('from' );
   to = window.localStorage.getItem('to');
   document.getElementById("fromCRS1").value = from;
-  document.getElementById("toCRS").value = to;
+  document.getElementById("toCRS1").value = to;
+
 }
 
 // main code
@@ -108,6 +110,8 @@ const footer = document.getElementsByClassName("footer");
 const nrccMessage = document.getElementsByClassName("nrcc-message");
 const stations = [ 'Earley', 'Guildford', 'London Waterloo', 'Paddington', 'Reading', 'Woking', 'Wokingham' ];
 fillStations(stations, 'fromCRS1');
-fillStations(stations, 'toCRS');
+fillStations(stations, 'toCRS1');
+fillStations(stations, 'fromCRS2');
+fillStations(stations, 'toCRS2');
 readLocalData();
 getData();
