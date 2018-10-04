@@ -1,0 +1,12 @@
+{
+  "short_name": "Daily Delays",
+  "name": "Daily Delays",
+  "description": "Check for delays on you daily commute.",
+  "display": "standalone",
+"icons": [
+  {
+    "src": "./train-256.png",
+    "type": "image/png",
+    "sizes": "256x256"
+  }]
+}

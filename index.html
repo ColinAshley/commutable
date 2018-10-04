@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon.ico">
+  <link rel="apple-touch-icon" href="./train-256.png">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link href="./train-256.png" sizes="256x256" rel="apple-touch-startup-image" />
+  <link rel="manifest" href="manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
+  <title>Daily Delays</title>
+  <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+  <div class="heading">
+    <div><img class="logo" src="icons/train-white.png" width="32px"></div>
+    <div class="title">Daily Delays</div>
+  </div>
+  <div class="journey">
+    <select id="fromCRS1" name="fromCRS1" onchange="getData()"></select>
+    <span>To</span>
+    <select id="toCRS" name="toCRS" onchange="getData()"></select>
+  </div>
+  <div class="results">
+    <p>Upcoming Departures</p>
+    <table class="delay-list"></table>
+  </div>
+  <div class="nrcc-message"></div>
+  <div class="refresh">
+    <span class="last-update"></span>
+    <button class="button" onclick="getData()">Refresh</button>
+  </div>
+  <!--- Load JavaScript and initialise Google Maps API -->
+  <script type="text/javascript" src="js/main.js"></script>
+</body>
+<footer class="footer">
+</footer>
+</html>
