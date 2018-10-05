@@ -7,29 +7,42 @@ function getData() {
   document.getElementById("toCRS2").value = from;
   let rows = 8;
 
-  fetch(`https://huxley.apphb.com/departures/${from}/to/${dest}/${rows}?expand=true&accessToken=6c40282b-0b27-431d-97c5-7366a47e6e51`, {
-    // nothing here
-    }).then(response => response.json())
-    .then(showData)
-    .catch(e => requestError(e, 'Error'));
-  }
+  // Using Huxley SOAP->JSON proxy
+  const urls = [
+    `https://huxley.apphb.com/departures/${from}/to/${dest}/${rows}?expand=true&accessToken=6c40282b-0b27-431d-97c5-7366a47e6e51`,
+    `https://huxley.apphb.com/departures/${dest}/to/${from}/${rows}?expand=true&accessToken=6c40282b-0b27-431d-97c5-7366a47e6e51`
+  ]
+
+  // use map() to perform a fetch and handle the response for each url
+  Promise.all(urls.map(url =>
+    fetch(url)
+      .then(response => response.json())
+      .then(showData)
+      .catch(e => requestError(e, 'Error'))
+  ))
+}
 
 function showData(data) {
   let lastRefresh = new Date().toLocaleTimeString('en-UK');
   document.getElementsByClassName('last-update')[0].textContent = `Last Update: ${lastRefresh}`;
+
   let journeyDest = document.getElementById("toCRS1").value;
   let journeyOrigin = document.getElementById("fromCRS1").value;
+  if (listnum == 1)
+  {
+    journeyDest = document.getElementById("toCRS2").value;
+    journeyOrigin = document.getElementById("fromCRS2").value;
+  }
+
   let delaydata = '';
-  delaylist[0].innerHTML = '';
-  nrccMessage[0].innerHTML = '';
+  delaylist[listnum].innerHTML = '';
+  nrccMessage[listnum].innerHTML = '';
 
   delaydata += `<tr><th>Plat</th><th>Scheduled</th><th>Expected</th><th>Stops</th><th>Arrives Dest</th></tr>`;
   for ( const [trainNum, trainData] of Object.entries(data.trainServices)) {
     let plat = trainData.platform != null ? trainData.platform : '__';
 
-    delaydata += `<tr>` +
-                 `<td>${plat}</td>` +
-                 `<td>${trainData.std}</td>`;
+    delaydata += `<tr><td>${plat}</td><td>${trainData.std}</td>`;
 
     if (trainData.etd != "On time") {
       delaydata += `<td class="delayed">`;
@@ -42,7 +55,7 @@ function showData(data) {
     delaydata += `${trainData.etd}</td>`;
 
     for ( const [callpoint, callData] of Object.entries(trainData.subsequentCallingPoints[0].callingPoint)) {
-      if (callData.locationName == journeyOrigin ) {
+      if (callData.locationName == this.journeyOrigin ) {
         let numCalls = 0;
       }
       numCalls++;
@@ -61,13 +74,18 @@ function showData(data) {
     }
   }
 
-  delaylist[0].innerHTML = delaydata;
+  delaylist[listnum].innerHTML = delaydata;
   if ( data.nrccMessages != null ) {
     nrccMessage[0].innerHTML=`${data.nrccMessages[0].value}`;
   }
   else
   {
     nrccMessage[0].innerHTML='';
+  }
+
+  listnum++;
+  if (listnum > 1) {
+    listnum = 0;
   }
   footer[0].innerHTML = 'Data supplied by nationalrail.co.uk';
   saveLocalData();
@@ -76,6 +94,7 @@ function showData(data) {
 function requestError(e, part) {
     console.log(e);
     nrccMessage[0].innerHTML = 'Invalid Route Selected';
+    listnum = 0;
 }
 
 function fillStations(destinations, field ) {
@@ -109,6 +128,7 @@ const delaylist = document.getElementsByClassName("delay-list");
 const footer = document.getElementsByClassName("footer");
 const nrccMessage = document.getElementsByClassName("nrcc-message");
 const stations = [ 'Earley', 'Guildford', 'London Waterloo', 'Paddington', 'Reading', 'Woking', 'Wokingham' ];
+let listnum=0;
 fillStations(stations, 'fromCRS1');
 fillStations(stations, 'toCRS1');
 fillStations(stations, 'fromCRS2');
