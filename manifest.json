@@ -1,12 +1,27 @@
 {
-  "short_name": "Daily Delays",
-  "name": "Daily Delays",
+  "short_name": "Commutable",
+  "name": "Commutable",
   "description": "Check for delays on you daily commute.",
   "display": "standalone",
-"icons": [
-  {
-    "src": "./train-256.png",
-    "type": "image/png",
-    "sizes": "256x256"
-  }]
+  "icons": [
+    {
+      "src": "./train-256.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "./train-256.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "./train-256.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "index.html",
+  "background_color": "darkgoldenrod",
+  "theme_color": "darkgoldenrod",
+  "prefer_related_applications": "true"
 }
