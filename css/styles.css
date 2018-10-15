@@ -138,10 +138,7 @@ select {
 
 .nrcc-text {
   color:  darkred;
-  font-size: 0.8em;
   text-align: center;
-  width:  90%;
-  margin:  20px auto 0 auto;
 }
 
 .refresh {
