@@ -15,8 +15,8 @@ function getData() {
 
   Promise.all(urls.map(url => fetch(url)))
     .then(resp => Promise.all( resp.map(r => r.json()) ))
-    .then(result => showData(result))
     .catch(e => requestError(e, 'Error'))
+    .then(result => showData(result))
 }
 
 
@@ -73,13 +73,17 @@ function showData(data) {
     }
 
     delaylist[listnum].innerHTML = delaydata;
-    if ( data.nrccMessages != null ) {
-      nrccMessage[0].innerHTML=`${data.nrccMessages[0].value}`;
+
+    if (data[listnum].nrccMessages !== null) {
+      for (const [message, messageData] of Object.entries(data[listnum].nrccMessages[listnum])) {
+        nrccMessage[0].innerHTML+=`<p class="nrcc-text">${messageData}</p>`;
+      }
     }
     else {
       nrccMessage[0].innerHTML='';
     }
   }
+
   footer[0].innerHTML = 'Data supplied by nationalrail.co.uk';
   saveLocalData();
 }
@@ -87,7 +91,6 @@ function showData(data) {
 function requestError(e, part) {
     console.log(`Error is: ${e}`)
     nrccMessage[0].innerHTML = 'Invalid Route Selected';
-    listnum = 0;
 }
 
 function fillStations(destinations, field ) {
@@ -115,14 +118,23 @@ function readLocalData() {
 }
 
 // main code
+// Register Servive Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js');
+  });
+}
 // Get table ready
 const delaylist = document.getElementsByClassName("delay-list");
 const footer = document.getElementsByClassName("footer");
 const nrccMessage = document.getElementsByClassName("nrcc-message");
 const stations = [ 'Bournemouth', 'Earley', 'Guildford', 'London Waterloo', 'Paddington', 'Reading', 'Woking', 'Wokingham' ];
+// Fill the select options
 fillStations(stations, 'fromCRS1');
 fillStations(stations, 'toCRS1');
 fillStations(stations, 'fromCRS2');
 fillStations(stations, 'toCRS2');
+// Read saved journey if available
 readLocalData();
+// Run the app
 getData();
