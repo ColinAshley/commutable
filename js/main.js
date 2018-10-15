@@ -13,14 +13,12 @@ function getData() {
     `https://huxley.apphb.com/departures/${dest}/to/${from}/${rows}?expand=true&accessToken=6c40282b-0b27-431d-97c5-7366a47e6e51`
   ]
 
-  // use map() to perform a fetch and handle the response for each url
-  Promise.all(urls.map(url =>
-    fetch(url)
-      .then(response => response.json())
-      .then(showData)
-      .catch(e => requestError(e, 'Error'))
-  ))
+  Promise.all(urls.map(url => fetch(url)))
+    .then(resp => Promise.all( resp.map(r => r.json()) ))
+    .then(result => showData(result))
+    .catch(e => requestError(e, 'Error'))
 }
+
 
 function showData(data) {
   let lastRefresh = new Date().toLocaleTimeString('en-UK');
@@ -28,71 +26,66 @@ function showData(data) {
 
   let journeyDest = document.getElementById("toCRS1").value;
   let journeyOrigin = document.getElementById("fromCRS1").value;
-  if (listnum == 1)
-  {
-    journeyDest = document.getElementById("toCRS2").value;
-    journeyOrigin = document.getElementById("fromCRS2").value;
-  }
 
-  let delaydata = '';
-  delaylist[listnum].innerHTML = '';
-  nrccMessage[listnum].innerHTML = '';
+  for (listnum = 0; listnum < 2; listnum++) {
+    if (listnum == 1) {
+      journeyDest = document.getElementById("toCRS2").value;
+      journeyOrigin = document.getElementById("fromCRS2").value;
+    }
 
-  delaydata += `<tr><th>Plat</th><th>Scheduled</th><th>Expected</th><th>Stops</th><th>Arrives Dest</th></tr>`;
-  for ( const [trainNum, trainData] of Object.entries(data.trainServices)) {
-    let plat = trainData.platform != null ? trainData.platform : '__';
+    let delaydata = '';
+    delaylist[listnum].innerHTML = '';
+    nrccMessage[listnum].innerHTML = '';
 
-    delaydata += `<tr><td>${plat}</td><td>${trainData.std}</td>`;
+    delaydata += `<tr><th>Plat</th><th>Scheduled</th><th>Expected</th><th>Stops</th><th>Arrives Dest</th></tr>`;
+    for ( const [trainNum, trainData] of Object.entries(data[listnum].trainServices)) {
+      let plat = trainData.platform != null ? trainData.platform : '__';
 
-    if (trainData.etd != "On time") {
-      delaydata += `<td class="delayed">`;
+      delaydata += `<tr><td>${plat}</td><td>${trainData.std}</td>`;
+
+      if (trainData.etd != "On time") {
+        delaydata += `<td class="delayed">`;
+      }
+      else {
+        delaydata += `<td class="on-time">`;
+      }
+
+      let numCalls = 0
+      delaydata += `${trainData.etd}</td>`;
+
+      for ( const [callpoint, callData] of Object.entries(trainData.subsequentCallingPoints[0].callingPoint)) {
+        if (callData.locationName == this.journeyOrigin ) {
+          let numCalls = 0;
+        }
+        numCalls++;
+        if (callData.locationName == journeyDest) {
+          delaydata += `<td>${numCalls-1}</td>`;
+          if (callData.et == 'On time') {
+            delaydata += `<td class="on-time">${callData.st}</td>`;
+          }
+          else {
+            delaydata += `<td class="delayed">${callData.et}</td>`;
+          }
+          delaydata += `</tr>`;
+          break;
+        }
+      }
+    }
+
+    delaylist[listnum].innerHTML = delaydata;
+    if ( data.nrccMessages != null ) {
+      nrccMessage[0].innerHTML=`${data.nrccMessages[0].value}`;
     }
     else {
-      delaydata += `<td class="on-time">`;
+      nrccMessage[0].innerHTML='';
     }
-
-    let numCalls = 0
-    delaydata += `${trainData.etd}</td>`;
-
-    for ( const [callpoint, callData] of Object.entries(trainData.subsequentCallingPoints[0].callingPoint)) {
-      if (callData.locationName == this.journeyOrigin ) {
-        let numCalls = 0;
-      }
-      numCalls++;
-      if (callData.locationName == journeyDest) {
-        delaydata += `<td>${numCalls-1}</td>`;
-        if (callData.et == 'On time') {
-          delaydata += `<td class="on-time">${callData.st}</td>`;
-        }
-        else
-        {
-          delaydata += `<td class="delayed">${callData.et}</td>`;
-        }
-        delaydata += `</tr>`;
-        break;
-      }
-    }
-  }
-
-  delaylist[listnum].innerHTML = delaydata;
-  if ( data.nrccMessages != null ) {
-    nrccMessage[0].innerHTML=`${data.nrccMessages[0].value}`;
-  }
-  else
-  {
-    nrccMessage[0].innerHTML='';
-  }
-
-  listnum++;
-  if (listnum > 1) {
-    listnum = 0;
   }
   footer[0].innerHTML = 'Data supplied by nationalrail.co.uk';
   saveLocalData();
 }
 
 function requestError(e, part) {
-    console.log(e);
+    console.log(`Error is: ${e}`)
     nrccMessage[0].innerHTML = 'Invalid Route Selected';
     listnum = 0;
 }
@@ -119,7 +112,6 @@ function readLocalData() {
   to = window.localStorage.getItem('to');
   document.getElementById("fromCRS1").value = from;
   document.getElementById("toCRS1").value = to;
-
 }
 
 // main code
@@ -127,8 +119,7 @@ function readLocalData() {
 const delaylist = document.getElementsByClassName("delay-list");
 const footer = document.getElementsByClassName("footer");
 const nrccMessage = document.getElementsByClassName("nrcc-message");
-const stations = [ 'Earley', 'Guildford', 'London Waterloo', 'Paddington', 'Reading', 'Woking', 'Wokingham' ];
-let listnum=0;
+const stations = [ 'Bournemouth', 'Earley', 'Guildford', 'London Waterloo', 'Paddington', 'Reading', 'Woking', 'Wokingham' ];
 fillStations(stations, 'fromCRS1');
 fillStations(stations, 'toCRS1');
 fillStations(stations, 'fromCRS2');
