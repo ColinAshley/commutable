@@ -38,47 +38,53 @@ function showData(data) {
     nrccMessage[listnum].innerHTML = '';
 
     delaydata += `<tr><th>Plat</th><th>Scheduled</th><th>Expected</th><th>Stops</th><th>Arrives Dest</th></tr>`;
-    for ( const [trainNum, trainData] of Object.entries(data[listnum].trainServices)) {
-      let plat = trainData.platform !== null ? trainData.platform : '__';
 
-      delaydata += `<tr><td>${plat}</td><td>${trainData.std}</td>`;
+    if (data[0].trainServices !== null) {
+      for ( const [trainNum, trainData] of Object.entries(data[listnum].trainServices)) {
+        let plat = trainData.platform !== null ? trainData.platform : '__';
 
-      if (trainData.etd != "On time") {
-        delaydata += `<td class="delayed">`;
+        delaydata += `<tr><td>${plat}</td><td>${trainData.std}</td>`;
+
+        if (trainData.etd != "On time") {
+          delaydata += `<td class="delayed">`;
+        }
+        else {
+          delaydata += `<td class="on-time">`;
+        }
+
+        let numCalls = 0;
+        delaydata += `${trainData.etd}</td>`;
+
+        for ( const [callpoint, callData] of Object.entries(trainData.subsequentCallingPoints[0].callingPoint)) {
+          if (callData.locationName == this.journeyOrigin ) {
+            let numCalls = 0;
+          }
+          numCalls++;
+          if (callData.locationName == journeyDest) {
+            delaydata += `<td>${numCalls-1}</td>`;
+            if (callData.et == 'On time') {
+              delaydata += `<td class="on-time">${callData.st}</td>`;
+            }
+            else {
+              delaydata += `<td class="delayed">${callData.et}</td>`;
+            }
+            delaydata += `</tr>`;
+            break;
+          }
+        }
+      }
+
+      delaylist[listnum].innerHTML = delaydata;
+
+      if (data[listnum].nrccMessages !== null) {
+        nrccMessage[listnum].innerHTML+=`<p class="nrcc-text">${data[listnum].nrccMessages[0].value}</p>`;
       }
       else {
-        delaydata += `<td class="on-time">`;
+        nrccMessage[listnum].innerHTML='';
       }
-
-      let numCalls = 0;
-      delaydata += `${trainData.etd}</td>`;
-
-      for ( const [callpoint, callData] of Object.entries(trainData.subsequentCallingPoints[0].callingPoint)) {
-        if (callData.locationName == this.journeyOrigin ) {
-          let numCalls = 0;
-        }
-        numCalls++;
-        if (callData.locationName == journeyDest) {
-          delaydata += `<td>${numCalls-1}</td>`;
-          if (callData.et == 'On time') {
-            delaydata += `<td class="on-time">${callData.st}</td>`;
-          }
-          else {
-            delaydata += `<td class="delayed">${callData.et}</td>`;
-          }
-          delaydata += `</tr>`;
-          break;
-        }
-      }
-    }
-
-    delaylist[listnum].innerHTML = delaydata;
-
-    if (data[listnum].nrccMessages !== null) {
-      nrccMessage[listnum].innerHTML+=`<p class="nrcc-text">${data[listnum].nrccMessages[0].value}</p>`;
     }
     else {
-      nrccMessage[listnum].innerHTML='';
+      nrccMessage[0].innerHTML = 'Not a direct route';
     }
   }
 
@@ -88,7 +94,7 @@ function showData(data) {
 
 function requestError(e, part) {
     console.log(`Error is: ${e}`);
-    nrccMessage[0].innerHTML = 'Invalid Route Selected';
+    nrccMessage[0].innerHTML = 'Unable to connect to NRE Database';
 }
 
 function fillStations(destinations, field ) {
