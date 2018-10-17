@@ -11,12 +11,12 @@ function getData() {
   const urls = [
     `https://huxley.apphb.com/departures/${from}/to/${dest}/${rows}?expand=true&accessToken=6c40282b-0b27-431d-97c5-7366a47e6e51`,
     `https://huxley.apphb.com/departures/${dest}/to/${from}/${rows}?expand=true&accessToken=6c40282b-0b27-431d-97c5-7366a47e6e51`
-  ]
+  ];
 
   Promise.all(urls.map(url => fetch(url)))
     .then(resp => Promise.all( resp.map(r => r.json()) ))
     .catch(e => requestError(e, 'Error'))
-    .then(result => showData(result))
+    .then(result => showData(result));
 }
 
 
@@ -39,7 +39,7 @@ function showData(data) {
 
     delaydata += `<tr><th>Plat</th><th>Scheduled</th><th>Expected</th><th>Stops</th><th>Arrives Dest</th></tr>`;
     for ( const [trainNum, trainData] of Object.entries(data[listnum].trainServices)) {
-      let plat = trainData.platform != null ? trainData.platform : '__';
+      let plat = trainData.platform !== null ? trainData.platform : '__';
 
       delaydata += `<tr><td>${plat}</td><td>${trainData.std}</td>`;
 
@@ -50,7 +50,7 @@ function showData(data) {
         delaydata += `<td class="on-time">`;
       }
 
-      let numCalls = 0
+      let numCalls = 0;
       delaydata += `${trainData.etd}</td>`;
 
       for ( const [callpoint, callData] of Object.entries(trainData.subsequentCallingPoints[0].callingPoint)) {
@@ -75,12 +75,10 @@ function showData(data) {
     delaylist[listnum].innerHTML = delaydata;
 
     if (data[listnum].nrccMessages !== null) {
-      for (const [message, messageData] of Object.entries(data[listnum].nrccMessages[listnum])) {
-        nrccMessage[0].innerHTML+=`<p class="nrcc-text">${messageData}</p>`;
-      }
+      nrccMessage[listnum].innerHTML+=`<p class="nrcc-text">${data[listnum].nrccMessages[0].value}</p>`;
     }
     else {
-      nrccMessage[0].innerHTML='';
+      nrccMessage[listnum].innerHTML='';
     }
   }
 
@@ -89,7 +87,7 @@ function showData(data) {
 }
 
 function requestError(e, part) {
-    console.log(`Error is: ${e}`)
+    console.log(`Error is: ${e}`);
     nrccMessage[0].innerHTML = 'Invalid Route Selected';
 }
 
