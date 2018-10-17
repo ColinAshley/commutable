@@ -2,7 +2,6 @@
   "short_name": "Commutable",
   "name": "Commutable",
   "description": "Check for delays on you daily commute.",
-  "display": "standalone",
   "icons": [
     {
       "src": "./train-256.png",
@@ -20,7 +19,9 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "index.html",
+  "display": "standalone",
+  "start_url": ".",
   "background_color": "darkgoldenrod",
-  "theme_color": "darkgoldenrod"
+  "theme_color": "darkgoldenrod",
+  "prefer_related_applications": true
 }

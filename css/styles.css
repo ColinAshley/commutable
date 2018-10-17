@@ -1,5 +1,4 @@
 body {
-  /*(font-family: 'Roboto', sans-serif;*/
   font-family: 'Nunito Sans', sans-serif;
   text-align: center;
   min-width: 360px;
@@ -91,7 +90,6 @@ p {
 }
 
 .select-return {
-  -webkit-appearance: textfield;
   height: 30px;
   overflow: hidden;
   width: 160px;
@@ -100,6 +98,7 @@ p {
   color:  white;
   border:  none;
   font-size:  1em;
+  -webkit-appearance: textfield;
 }
 
 .results {
