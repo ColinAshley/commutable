@@ -79,7 +79,7 @@ p {
   padding: 10px 0 10px 0;
 }
 
-select {
+.select-outward {
   border-radius: 5px;
   height: 30px;
   overflow: hidden;
@@ -87,6 +87,17 @@ select {
   background-color: darkgoldenrod;
   color:  white;
   border:  1px solid white;
+}
+
+.select-return {
+  -webkit-appearance: textfield;
+  height: 30px;
+  overflow: hidden;
+  width: 150px;
+  margin-left:  5px;
+  background-color: darkgoldenrod;
+  color:  white;
+  border:  none;
 }
 
 .results {
