@@ -8,7 +8,7 @@ body {
 
 .swipeView {
   display: grid;
-  grid-template-columns: repeat(2, 100%);
+  grid-template-columns: repeat(2, 99.5%);
   will-change: transform;
   align-content: center;
   overflow-x: auto;
@@ -27,6 +27,7 @@ section {
 }
 
 .return {
+  border-left:  1px dotted darkgoldenrod;
 }
 
 button {
@@ -49,11 +50,17 @@ button {
 
 .title {
   margin:  5px auto auto 16px;
+  color:  goldenrod;
+}
+
+.slogan {
+  font-size:  0.3em;
+  margin:  20px auto auto 0px;
 }
 
 p {
   margin: 10px auto 5px auto;
-  color:  darkgoldenrod ;
+  color:  black;
 }
 
 .heading {
@@ -90,11 +97,12 @@ p {
 }
 
 .select-return {
+  padding-left:  5px;
+  border-radius: 5px;
   height: 30px;
   overflow: hidden;
   width: 160px;
-  margin-left:  5px;
-  background-color: darkgoldenrod;
+  background-color: goldenrod;
   color:  white;
   border:  none;
   font-size:  1em;

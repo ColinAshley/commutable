@@ -73,7 +73,6 @@ function showData(data) {
           }
         }
       }
-
       delaylist[listnum].innerHTML = delaydata;
 
       if (data[listnum].nrccMessages !== null) {
@@ -82,14 +81,12 @@ function showData(data) {
       else {
         nrccMessage[listnum].innerHTML='';
       }
+      saveLocalData();
     }
     else {
       nrccMessage[0].innerHTML = 'Not a direct route';
     }
   }
-
-  footer[0].innerHTML = 'Data supplied by nationalrail.co.uk';
-  saveLocalData();
 }
 
 function requestError(e, part) {
