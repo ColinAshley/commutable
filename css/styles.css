@@ -43,19 +43,20 @@ button {
 }
 
 .logo {
-  margin: 8px 0 0 0;
+  margin: 5px 0 0 0;
   width: 32px;
   height: 32px;
 }
 
 .title {
-  margin:  5px auto auto 16px;
+  font-size:  0.8em;
+  margin:  5px auto auto 0;
   color:  goldenrod;
 }
 
 .slogan {
-  font-size:  0.3em;
-  margin:  20px auto auto 0px;
+  font-size:  0.4em;
+  margin:  15px auto auto 0;
 }
 
 p {
@@ -93,7 +94,7 @@ p {
   background-color: darkgoldenrod;
   color:  white;
   border:  1px solid white;
-  font-size:  1em;
+  font-size:  0.8em;
 }
 
 .select-return {
@@ -105,7 +106,7 @@ p {
   background-color: goldenrod;
   color:  white;
   border:  none;
-  font-size:  1em;
+  font-size:  0.8em;
   -webkit-appearance: textfield;
 }
 
