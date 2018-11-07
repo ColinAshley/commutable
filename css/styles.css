@@ -48,6 +48,11 @@ button {
   height: 32px;
 }
 
+.credit {
+  margin-top:  5px;
+  height:  4%;
+}
+
 .title {
   font-size:  0.8em;
   margin:  5px auto auto 0;
@@ -181,8 +186,9 @@ p {
   bottom: 0;
   left: 0;
   text-align: center;
-  background-color: darkgoldenrod;
+  background-color: whitesmoke;
   color:  white;
+  border-top:  1px solid darkgoldenrod;
 }
 
 @media screen and (max-width: 480px) {
