@@ -129,7 +129,7 @@ if ('serviceWorker' in navigator) {
 const delaylist = document.getElementsByClassName("delay-list");
 const footer = document.getElementsByClassName("footer");
 const nrccMessage = document.getElementsByClassName("nrcc-message");
-const stations = [ 'Bournemouth', 'Clapham Junction', 'Earley', 'Gatwick Airport', 'Guildford', 'Leamington Spa', 'London Waterloo', 'Maidenhead', 'Marlow', 'London Marylebone', 'Paddington', 'Reading', 'Shepherds Bush', 'Slough', 'Woking', 'West Hampstead', 'Wokingham' ];
+const stations = [ 'Bournemouth', 'Bramley (Hants)', 'Clapham Junction', 'Earley', 'Gatwick Airport', 'Guildford', 'Leamington Spa', 'London Waterloo', 'Maidenhead', 'Marlow', 'London Marylebone', 'Paddington', 'Reading', 'Shepherds Bush', 'Slough', 'Woking', 'West Hampstead', 'Wokingham' ];
 // Fill the select options
 fillStations(stations, 'fromCRS1');
 fillStations(stations, 'toCRS1');
